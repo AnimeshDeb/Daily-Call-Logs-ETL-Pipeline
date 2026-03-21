@@ -1,0 +1,37 @@
+name: Daily Operational ETL
+
+on:
+  schedule:
+    # running at midnight utc every single day
+    - cron: '0 0 * * *'
+
+  # able to manually run it whenever I want
+  workflow_dispatch:
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest 
+
+    steps:
+      # get code from repo
+      - name: Checkout Repository 
+        uses: actions/checkout@v4 
+
+      # spin up pyenv
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # installing tools from requirements.txt
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # run engine, passing secrets
+      - name: Execute ETL Script
+        env: 
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: python etl_pipeline.py
