@@ -34,4 +34,5 @@ jobs:
         env: 
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          GOOGLE_CREDENTIALS: ${{secrets.GOOGLE_CREDENTIALS}}
         run: python etl_pipeline.py
